@@ -12,11 +12,12 @@
     <title>rent-service</title>
 </head>
 <body>
-    <h1>List of cities:</h1>
-    <ul>
-        <c:forEach var="city" items="${requestScope.cities}">
-            ${city.name}
-        </c:forEach>
-    </ul>
+<h1>List of cities:</h1>
+<h1>Hi from Main</h1>
+<ul>
+    <c:forEach var="city" items="${requestScope.cities}">
+        <li>${city.name}</li>
+    </c:forEach>
+</ul>
 </body>
 </html>

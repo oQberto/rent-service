@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 @UtilityClass
 public class ConnectionManager {
+    private static final String DRIVER_CLASS_KEY = "db.driver.class";
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
     private static final String URL_KEY = "db.url";
@@ -15,6 +16,8 @@ public class ConnectionManager {
 
     static {
         config = new HikariDataSource();
+
+        config.setDriverClassName(PropertiesUtil.get(DRIVER_CLASS_KEY));
 
         config.setJdbcUrl(PropertiesUtil.get(URL_KEY));
         config.setUsername(PropertiesUtil.get(USERNAME_KEY));
