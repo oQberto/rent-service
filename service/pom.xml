@@ -15,9 +15,15 @@
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <database.version>1.0-SNAPSHOT</database.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>by.alex</groupId>
+            <artifactId>database</artifactId>
+            <version>${database.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
