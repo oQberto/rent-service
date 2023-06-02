@@ -16,11 +16,17 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <service.version>1.0-SNAPSHOT</service.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>by.alex</groupId>
+            <artifactId>service</artifactId>
+            <version>${service.version}</version>
+        </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
