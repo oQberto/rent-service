@@ -1,16 +1,12 @@
 package by.alex.util;
 
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import static lombok.AccessLevel.PRIVATE;
-
 @UtilityClass
-@NoArgsConstructor(access = PRIVATE)
 public class PropertiesUtil {
     private static final Properties PROPERTIES = new Properties();
 

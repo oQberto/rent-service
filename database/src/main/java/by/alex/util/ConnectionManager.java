@@ -1,16 +1,12 @@
 package by.alex.util;
 
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static lombok.AccessLevel.PRIVATE;
-
 @UtilityClass
-@NoArgsConstructor(access = PRIVATE)
 public class ConnectionManager {
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
