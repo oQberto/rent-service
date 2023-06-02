@@ -1,31 +1,31 @@
 package by.alex.util;
 
-import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @UtilityClass
 @NoArgsConstructor(access = PRIVATE)
 public class ConnectionManager {
-    private static final ConnectionManager INSTANCE = new ConnectionManager();
     private static final String USERNAME_KEY = "db.username";
     private static final String PASSWORD_KEY = "db.password";
     private static final String URL_KEY = "db.url";
-    private final HikariConfig config = new HikariConfig();
+    private final HikariDataSource config;
 
     static {
-        config.setJdbcUrl();
+        config = new HikariDataSource();
+
+        config.setJdbcUrl(PropertiesUtil.get(URL_KEY));
+        config.setUsername(PropertiesUtil.get(USERNAME_KEY));
+        config.setPassword(PropertiesUtil.get(PASSWORD_KEY));
     }
 
-    public static Connection getConnection() {
-        return null;
-    }
-
-    public static ConnectionManager getInstance() {
-        return INSTANCE;
+    public static Connection getConnection() throws SQLException {
+        return config.getConnection();
     }
 }
