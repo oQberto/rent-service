@@ -67,8 +67,8 @@ public class AddressDao implements Dao<Integer, Address> {
     private Address build(ResultSet resultSet) throws SQLException {
         return Address.builder()
                 .id(resultSet.getInt("id"))
-                .street(null)
-                .city(null)
+                .street(null) //@TODO make StreetDao
+                .city(null) //@TODO make CityDao
                 .houseNumber(resultSet.getInt("house_number"))
                 .build();
     }
