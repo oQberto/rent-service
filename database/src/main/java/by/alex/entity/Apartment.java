@@ -22,5 +22,5 @@ public class Apartment {
     private Boolean furnished;
     private LeaseTerm leaseTerm;
     private Address address;
-    private List<String> apartment_photo;
+    private List<ApartmentPhoto> apartment_photo;
 }
