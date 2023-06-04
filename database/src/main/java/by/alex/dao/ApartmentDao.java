@@ -1,13 +1,17 @@
 package by.alex.dao;
 
 import by.alex.entity.Apartment;
+import by.alex.entity.enums.LeaseTerm;
+import by.alex.entity.enums.PropertyType;
 import by.alex.util.ConnectionManager;
+import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,19 +60,20 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
     }
 
     @Override
+    @SneakyThrows
     public Optional<Apartment> findById(Integer id) {
-        Apartment apartment;
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            Apartment apartment = null;
 
-            apartment = build(resultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            if (resultSet.next()) {
+                apartment = build(resultSet);
+            }
+            return Optional.ofNullable(apartment);
         }
-        return Optional.ofNullable(apartment);
     }
 
     @Override
@@ -86,7 +91,16 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
         return false;
     }
 
-    private Apartment build(ResultSet resultSet) {
-        return null;
+    private Apartment build(ResultSet resultSet) throws SQLException {
+        return Apartment.builder()
+                .id(resultSet.getInt("id"))
+                .propertyType(PropertyType.valueOf(resultSet.getString("property_type").toUpperCase()))
+                .yearBuilt(resultSet.getTimestamp("year_built").toLocalDateTime())
+                .petFriendly(resultSet.getBoolean("pet_friendly"))
+                .furnished(resultSet.getBoolean("furnished"))
+                .leaseTerm(LeaseTerm.valueOf(resultSet.getString("lease_term").toUpperCase()))
+                .address(null)
+                .apartment_photo(Collections.singletonList(String.valueOf(resultSet.getArray("apartment_photo"))))
+                .build();
     }
 }
