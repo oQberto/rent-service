@@ -25,6 +25,19 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 apartment_photo
             FROM apartment;
             """;
+    private static final String FIND_BY_ID_SQL = """
+            SELECT
+                id,
+                property_type,
+                year_built,
+                pet_friendly,
+                furnished,
+                lease_term,
+                address,
+                apartment_photo
+            FROM apartment
+            WHERE id = ?
+            """;
 
     @Override
     public List<Apartment> findAll() {
@@ -44,7 +57,18 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
 
     @Override
     public Optional<Apartment> findById(Integer id) {
-        return Optional.empty();
+        Apartment apartment;
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            apartment = build(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.ofNullable(apartment);
     }
 
     @Override
