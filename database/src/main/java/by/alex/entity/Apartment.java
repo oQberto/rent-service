@@ -21,5 +21,6 @@ public class Apartment {
     private Boolean petFriendly;
     private Boolean furnished;
     private LeaseTerm leaseTerm;
+    private Address address;
     private List<String> apartment_photo;
 }
