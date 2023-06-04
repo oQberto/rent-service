@@ -4,6 +4,7 @@ import by.alex.entity.Apartment;
 import by.alex.entity.enums.LeaseTerm;
 import by.alex.entity.enums.PropertyType;
 import by.alex.util.ConnectionManager;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
@@ -15,8 +16,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class ApartmentDao implements Dao<Integer, Apartment> {
+import static lombok.AccessLevel.PRIVATE;
 
+@NoArgsConstructor(access = PRIVATE)
+public class ApartmentDao implements Dao<Integer, Apartment> {
+    private static final ApartmentDao INSTANCE = new ApartmentDao();
     private static final String FIND_ALL_SQL = """
             SELECT
                 id,
@@ -99,8 +103,11 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 .petFriendly(resultSet.getBoolean("pet_friendly"))
                 .furnished(resultSet.getBoolean("furnished"))
                 .leaseTerm(LeaseTerm.valueOf(resultSet.getString("lease_term").toUpperCase()))
-                .address(null)
+                .address(AddressDao.getInstance().findById(resultSet.getInt("address")).get())
                 .apartment_photo(Collections.singletonList(String.valueOf(resultSet.getArray("apartment_photo"))))
                 .build();
+    }
+    public static ApartmentDao getInstance() {
+        return INSTANCE;
     }
 }
