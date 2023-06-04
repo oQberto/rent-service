@@ -102,9 +102,10 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 .furnished(resultSet.getBoolean("furnished"))
                 .leaseTerm(LeaseTerm.valueOf(resultSet.getString("lease_term").toUpperCase()))
                 .address(AddressDao.getInstance().findById(resultSet.getInt("address")).orElse(new Address()))
-                .apartment_photo(null)
+                .apartment_photo(ApartmentPhotoDao.getInstance().findByApartmentId(resultSet.getInt("id")))
                 .build();
     }
+
     public static ApartmentDao getInstance() {
         return INSTANCE;
     }
