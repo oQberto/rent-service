@@ -1,5 +1,6 @@
 package by.alex.dao;
 
+import by.alex.entity.Address;
 import by.alex.entity.Apartment;
 import by.alex.entity.enums.LeaseTerm;
 import by.alex.entity.enums.PropertyType;
@@ -12,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +29,7 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 pet_friendly,
                 furnished,
                 lease_term,
-                address,
-                apartment_photo
+                address
             FROM apartment;
             """;
     private static final String FIND_BY_ID_SQL = """
@@ -41,8 +40,7 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 pet_friendly,
                 furnished,
                 lease_term,
-                address,
-                apartment_photo
+                address
             FROM apartment
             WHERE id = ?
             """;
@@ -103,8 +101,8 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 .petFriendly(resultSet.getBoolean("pet_friendly"))
                 .furnished(resultSet.getBoolean("furnished"))
                 .leaseTerm(LeaseTerm.valueOf(resultSet.getString("lease_term").toUpperCase()))
-                .address(AddressDao.getInstance().findById(resultSet.getInt("address")).get())
-                .apartment_photo(Collections.singletonList(String.valueOf(resultSet.getArray("apartment_photo"))))
+                .address(AddressDao.getInstance().findById(resultSet.getInt("address")).orElse(new Address()))
+                .apartment_photo(null)
                 .build();
     }
     public static ApartmentDao getInstance() {
