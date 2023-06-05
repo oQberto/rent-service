@@ -1,6 +1,8 @@
 package by.alex.dao;
 
 import by.alex.entity.Address;
+import by.alex.entity.City;
+import by.alex.entity.Street;
 import by.alex.util.ConnectionManager;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,6 +18,8 @@ import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class AddressDao implements Dao<Integer, Address> {
+    private static final StreetDao STREET_DAO = StreetDao.getInstance();
+    private static final CityDao CITY_DAO = CityDao.getInstance();
     private static final AddressDao INSTANCE = new AddressDao();
     private static final String FIND_BY_ID_SQL = """
             SELECT
@@ -67,8 +71,12 @@ public class AddressDao implements Dao<Integer, Address> {
     private Address build(ResultSet resultSet) throws SQLException {
         return Address.builder()
                 .id(resultSet.getInt("id"))
-                .street(null) //@TODO make StreetDao
-                .city(null) //@TODO make CityDao
+                .street(STREET_DAO.findById(
+                        resultSet.getInt("street_id"))
+                        .orElse(new Street()))
+                .city(CITY_DAO.findById(
+                        resultSet.getInt("city_id"))
+                        .orElse(new City()))
                 .houseNumber(resultSet.getInt("house_number"))
                 .build();
     }
