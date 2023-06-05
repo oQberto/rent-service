@@ -16,6 +16,7 @@ public class CityService {
     public List<CityDto> findAll() {
         return cityDao.findAll().stream()
                 .map(city -> CityDto.builder()
+                        .id(city.getId())
                         .name(city.getName())
                         .build())
                 .toList();

@@ -15,7 +15,9 @@ public class ApartmentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("apartments", apartmentService.findAll());
-        req.getRequestDispatcher("/WEB_INF/jsp/apartments.jsp");
+        Integer cityId = Integer.valueOf(req.getParameter("cityId"));
+        req.setAttribute("apartments", apartmentService.findByCityId(cityId));
+        req.getRequestDispatcher("/WEB-INF/jsp/apartments.jsp")
+                .forward(req, resp);
     }
 }

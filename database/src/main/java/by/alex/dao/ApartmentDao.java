@@ -45,6 +45,35 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
             FROM apartment
             WHERE id = ?
             """;
+    private static final String FIND_BY_CITY_ID_SQL = """
+            SELECT
+                apartment.id,
+                property_type,
+                year_built,
+                pet_friendly,
+                furnished,
+                lease_term,
+                address
+            FROM apartment
+            JOIN address a on a.id = apartment.address
+            WHERE city_id = ?
+            """;
+
+    @SneakyThrows
+    public List<Apartment> findByCityId(Integer id) {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_CITY_ID_SQL)) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Apartment> apartments = new ArrayList<>();
+
+            while (resultSet.next()) {
+                apartments.add(build(resultSet));
+            }
+            return apartments;
+        }
+    }
 
     @Override
     public List<Apartment> findAll() {
@@ -103,7 +132,7 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 .furnished(resultSet.getBoolean("furnished"))
                 .leaseTerm(LeaseTerm.valueOf(resultSet.getString("lease_term").toUpperCase()))
                 .address(ADDRESS_DAO.findById(
-                        resultSet.getInt("address"))
+                                resultSet.getInt("address"))
                         .orElse(new Address()))
                 .build();
     }
