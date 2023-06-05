@@ -20,6 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class ApartmentDao implements Dao<Integer, Apartment> {
+    private static final ApartmentPhotoDao APARTMENT_PHOTO_DAO = ApartmentPhotoDao.getInstance();
     private static final AddressDao ADDRESS_DAO = AddressDao.getInstance();
     private static final ApartmentDao INSTANCE = new ApartmentDao();
     private static final String FIND_ALL_SQL = """
@@ -102,8 +103,10 @@ public class ApartmentDao implements Dao<Integer, Apartment> {
                 .petFriendly(resultSet.getBoolean("pet_friendly"))
                 .furnished(resultSet.getBoolean("furnished"))
                 .leaseTerm(LeaseTerm.valueOf(resultSet.getString("lease_term").toUpperCase()))
-                .address(ADDRESS_DAO.findById(resultSet.getInt("address")).orElse(new Address()))
-                .apartment_photo(ApartmentPhotoDao.getInstance().findByApartmentId(resultSet.getInt("id")))
+                .address(ADDRESS_DAO.findById(
+                        resultSet.getInt("address"))
+                        .orElse(new Address()))
+                .apartment_photo(APARTMENT_PHOTO_DAO.findByApartmentId(resultSet.getInt("id")))
                 .build();
     }
 
