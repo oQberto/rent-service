@@ -3,6 +3,7 @@ package by.alex.dao;
 import by.alex.entity.City;
 import by.alex.util.ConnectionManager;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +23,12 @@ public class CityDao implements Dao<Integer, City> {
                    name
             FROM city
             """;
+    private static final String FIND_BY_ID_SQL = """
+            SELECT *
+            FROM city
+            WHERE id = ?
+            """;
+
     @Override
     public List<City> findAll() {
         List<City> cities = new ArrayList<>();
@@ -39,8 +46,20 @@ public class CityDao implements Dao<Integer, City> {
     }
 
     @Override
+    @SneakyThrows
     public Optional<City> findById(Integer id) {
-        return Optional.empty();
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            City city = null;
+
+            if (resultSet.next()) {
+                city = buidCity(resultSet);
+            }
+            return Optional.ofNullable(city);
+        }
     }
 
     @Override
